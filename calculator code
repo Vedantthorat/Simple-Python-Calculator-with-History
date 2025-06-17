@@ -1,0 +1,75 @@
+history = 'file.txt'
+
+def showHistory():
+    with open(history, 'r') as file:
+        lines = file.readlines()
+        if len(lines) == 0:
+            print('No History found')
+        else:
+            for line in lines:
+                print(line.strip())
+
+def clearhistory():
+    with open(history, 'w'):
+        pass  # This clears the file content
+    print('History deleted successfully')
+
+def save(user, res):
+    with open(history, 'a') as file:
+        file.write(user + ' = ' + str(res) + '\n')
+
+def calculate(user):
+    data = user.split()
+    if len(data) != 3:
+        print('INVALID EQUATION')
+        return
+
+    try:
+        num1 = float(data[0])
+        op = data[1]
+        num2 = float(data[2])
+    except ValueError:
+        print('INVALID NUMBER FORMAT')
+        return
+
+    if op == '+':
+        res = num1 + num2
+    elif op == '-':
+        res = num1 - num2
+    elif op == '*':
+        res = num1 * num2
+    elif op == '/':
+        if num2 == 0:
+            print('Cannot divide by zero')
+            return
+        res = num1 / num2
+    elif op == '%':
+        res = num1 % num2
+    else:
+        print('INVALID OPERATOR USED (+ - * / %)')
+        return
+
+    # Format and display result
+    if res.is_integer():
+        res = int(res)
+    print('Result =', res)
+
+    # Save result to history
+    save(user, res)
+
+def main():
+    print('------------ Simple Calculator -------------')
+    print("Type 'history' to view, 'clear' to clear history, 'exit' to quit.")
+    while True:
+        user = input('Enter the equation to solve (e.g. 5 + 6): ')
+        if user.strip().lower() == 'exit':
+            print('Thank you for using the calculator.')
+            break
+        elif user.strip().lower() == 'history':
+            showHistory()
+        elif user.strip().lower() == 'clear':
+            clearhistory()
+        else:
+            calculate(user)
+
+main()
